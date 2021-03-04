@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1614776300 source:c:\users\denis\desktop\myvectorremaster\main.c
+	<stdio.h>
+	<stdlib.h>
+	<complex.h>
+	<malloc.h>
+
