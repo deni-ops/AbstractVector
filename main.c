@@ -7,9 +7,9 @@ typedef struct AbstractVector Vector;
 
 struct VectorOpers
 {
-    Vector* (*sum)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
-    Vector* (*scalarMult)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
-    Vector* (*dotProduct)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
+    Vector* (*sum)(Vector* v1, Vector* v2, Vector* (*SumType)(Vector*, Vector*) );
+    Vector* (*scalarMult)(Vector* v1, Vector* v2, Vector* (*ScalarMultType)(Vector*, Vector*) );
+    Vector* (*dotProduct)(Vector* v1, Vector* v2, Vector* (*DotProductType)(Vector*, Vector*) );
 
     void (*assign)(Vector* v, void* coords, size_t size, void (*AssignType)(Vector* v, void* coords, size_t size) );
 };
@@ -27,9 +27,9 @@ Vector* Sum(Vector* v1, Vector* v2, Vector* (*SumType)(Vector*, Vector*) )
     return SumType(v1, v2);
 }
 
-Vector* ScalarMult(Vector* v1, Vector* v2, Vector* (ScalarMultType)(Vector*, Vector*) )
+Vector* DotProduct(Vector* v1, Vector* v2, Vector* (DotProductType)(Vector*, Vector*) )
 {
-    return ScalarMultType(v1, v2);
+    return DotProductType(v1, v2);
 }
 
 Vector* SumInt(Vector* v1, Vector* v2)
@@ -125,7 +125,7 @@ Vector* SumDoubleComplex(Vector* v1, Vector* v2)
     return v;
 }
 
-Vector* ScalarMultInt(Vector* v1, Vector* v2)
+Vector* DotProductInt(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
@@ -156,7 +156,7 @@ Vector* ScalarMultInt(Vector* v1, Vector* v2)
     return v;
 }
 
-Vector* ScalarMultDouble(Vector* v1, Vector* v2)
+Vector* DotProductDouble(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
@@ -187,7 +187,7 @@ Vector* ScalarMultDouble(Vector* v1, Vector* v2)
     return v;
 }
 
-Vector* ScalarMultDoubleComplex(Vector* v1, Vector* v2)
+Vector* DotProductDoubleComplex(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
@@ -264,11 +264,11 @@ Vector* VectorCtor()
     v->opers = malloc(sizeof(struct VectorOpers));
 
     v->opers->sum = malloc(sizeof(Sum));
-    v->opers->scalarMult = malloc(sizeof(ScalarMult));
+    v->opers->dotProduct = malloc(sizeof(DotProduct));
     v->opers->assign = malloc(sizeof(Assign));
 
     v->opers->sum = &Sum;
-    v->opers->sum = &ScalarMult;
+    v->opers->sum = &DotProduct;
 
     v->coords = NULL;
     v->size = 0;
