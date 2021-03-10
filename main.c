@@ -32,6 +32,56 @@ Vector* DotProduct(Vector* v1, Vector* v2, Vector* (DotProductType)(Vector*, Vec
     return DotProductType(v1, v2);
 }
 
+Vector* ScalarMult(Vector* v, void* scalar, Vector* (ScalarMultType)(Vector*, void*) )
+{
+    return ScalarMultType(v, scalar);
+}
+
+Vector* ScalarMultInt(Vector* v1, int* scalar)
+{
+    Vector* v = malloc(sizeof(Vector));
+    v->coords = malloc(sizeof(int)*v1->size);
+    v->size = v1->size;
+
+    for (size_t i=0; i<v1->size; ++i)
+    {
+        int coord1 = ((int*)v1->coords)[i];
+
+        ((int*)v->coords)[i] = coord1 * (*scalar);
+    }
+    return v;
+}
+
+Vector* ScalarMultDouble(Vector* v1, double* scalar)
+{
+    Vector* v = malloc(sizeof(Vector));
+    v->coords = malloc(sizeof(double)*v1->size);
+    v->size = v1->size;
+
+    for (size_t i=0; i<v1->size; ++i)
+    {
+        double coord1 = ((double*)v1->coords)[i];
+
+        ((double*)v->coords)[i] = coord1 * (*scalar);
+    }
+    return v;
+}
+
+Vector* ScalarMultDoubleComplex(Vector* v1, double complex* scalar)
+{
+    Vector* v = malloc(sizeof(Vector));
+    v->coords = malloc(sizeof(double complex)*v1->size);
+    v->size = v1->size;
+
+    for (size_t i=0; i<v1->size; ++i)
+    {
+        double complex coord1 = ((double complex*)v1->coords)[i];
+
+        ((double complex*)v->coords)[i] = coord1 * (*scalar);
+    }
+    return v;
+}
+
 Vector* SumInt(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
@@ -263,12 +313,10 @@ Vector* VectorCtor()
     Vector* v = malloc(sizeof(Vector));
     v->opers = malloc(sizeof(struct VectorOpers));
 
-    v->opers->sum = malloc(sizeof(Sum));
-    v->opers->dotProduct = malloc(sizeof(DotProduct));
-    v->opers->assign = malloc(sizeof(Assign));
-
     v->opers->sum = &Sum;
-    v->opers->sum = &DotProduct;
+    v->opers->dotProduct = &DotProduct;
+    v->opers->scalarMult = &ScalarMult;
+    v->opers->assign= &Assign;
 
     v->coords = NULL;
     v->size = 0;
@@ -285,14 +333,21 @@ int main()
     int coordArr1[3] = {1,2,3};
     int coordArr2[3] = {5,6,9};
 
+    int *scalar = malloc(sizeof(int));
+    *scalar = 25;
+
     Assign(v1, coordArr1, 3, &AssignInt);
     Assign(v2, coordArr2, 3, &AssignInt);
 
-    Vector* res = Sum(v1, v2, &SumInt);
+    Vector* sum = VectorCtor();
+    sum = sum->opers->sum(v1, v2, &SumInt);
+
+    Vector* scalarMult = VectorCtor();
+    scalarMult = scalarMult->opers->scalarMult(v1, scalar, ScalarMultInt);
 
     for (int i=0; i<3; ++i)
     {
-        printf("%d\n", ((int*)res->coords)[i]);
+        printf("%d\n", ((int*)sum->coords)[i]);
     }
 
     for (int i=0; i<3; ++i)
