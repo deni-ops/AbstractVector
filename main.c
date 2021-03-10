@@ -6,202 +6,283 @@
 struct AbstractVector
 {
     size_t size;
-    void** coords;
+    void* coords;
 };
 
 typedef struct AbstractVector Vector;
 
-// Abstract functions
+Vector* VectorCtor()
+{
+    Vector* v = malloc(sizeof(Vector));
 
-Vector* Sum(Vector v1, Vector v2, Vector* (*SumType)(Vector, Vector) )
+    v->coords = NULL;
+    v->size = 0;
+
+    return v;
+}
+
+Vector* Sum(Vector* v1, Vector* v2, Vector* (*SumType)(Vector*, Vector*) )
 {
     return SumType(v1, v2);
 }
 
-Vector* ScalarMult(Vector v1, Vector v2, Vector* (ScalarMultType)(Vector, Vector) )
+Vector* ScalarMult(Vector* v1, Vector* v2, Vector* (ScalarMultType)(Vector*, Vector*) )
 {
     return ScalarMultType(v1, v2);
 }
 
-// Functions to pass to previously implemented abstract functions
-
-Vector* SumInt(Vector v1, Vector v2)
+Vector* SumInt(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(int)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((int*)v->coords[i]) = *((int*)v1.coords[i]) + *((int*)v2.coords[i]);
+            int coord1 = ((int*)v1->coords)[i];
+            int coord2 = ((int*)v2->coords)[i];
+
+            ((int*)v->coords)[i] = coord1 + coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't sum vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when summing vectors with different dimensions");
+        printf("Error occurred: can't sum vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
-Vector* SumDouble(Vector v1, Vector v2)
+Vector* SumDouble(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(double)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((double*)v->coords[i]) = *((double*)v1.coords[i]) + *((double*)v2.coords[i]);
+            double coord1 = ((double*)v1->coords)[i];
+            double coord2 = ((double*)v2->coords)[i];
+
+            ((double*)v->coords)[i] = coord1 + coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't sum vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when summing vectors with different dimensions");
+        printf("Error occurred: can't sum vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
-Vector* SumDoubleComplex(Vector v1, Vector v2)
+Vector* SumDoubleComplex(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(double complex)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((double complex*)v->coords[i]) = *((double complex*)v1.coords[i]) + *((double complex*)v2.coords[i]);
+            double complex coord1 = ((double complex*)v1->coords)[i];
+            double complex coord2 = ((double complex*)v2->coords)[i];
+
+            ((double complex*)v->coords)[i] = coord1 + coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't sum vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when summing vectors with different dimensions");
+        printf("Error occurred: can't sum vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
-Vector* ScalarMultInt(Vector v1, Vector v2)
+Vector* ScalarMultInt(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(int)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((int*)v->coords[i]) = *((int*)v1.coords[i]) * *((int*)v2.coords[i]);
+            int coord1 = ((int*)v1->coords)[i];
+            int coord2 = ((int*)v2->coords)[i];
+
+            ((int*)v->coords)[i] = coord1 * coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't multiply vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when scalar multiplying vectors with different dimensions");
+        printf("Error occurred: can't multiply vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
-Vector* ScalarMultDouble(Vector v1, Vector v2)
+Vector* ScalarMultDouble(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(double)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((double*)v->coords[i]) = *((double*)v1.coords[i]) * *((double*)v2.coords[i]);
+            double coord1 = ((double*)v1->coords)[i];
+            double coord2 = ((double*)v2->coords)[i];
+
+            ((double*)v->coords)[i] = coord1 * coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't multiply vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when scalar multiplying vectors with different dimensions");
+        printf("Error occurred: can't multiply vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
-Vector* ScalarMultDoubleComplex(Vector v1, Vector v2)
+Vector* ScalarMultDoubleComplex(Vector* v1, Vector* v2)
 {
     Vector* v = NULL;
 
-    if (v1.size == v2.size)
+    if (v1->size == v2->size && v1->size != 0)
     {
         v = malloc(sizeof(Vector));
-        v->size = v1.size;
+        v->coords = malloc(sizeof(double complex)*v1->size);
+        v->size = v1->size;
 
-        for (int i=0; i<v1.size; ++i)
+        for (size_t i=0; i<v1->size; ++i)
         {
-            *((double complex*)v->coords[i]) = *((double complex*)v1.coords[i]) * *((double complex*)v2.coords[i]);
+            double complex coord1 = ((double complex*)v1->coords)[i];
+            double complex coord2 = ((double complex*)v2->coords)[i];
+
+            ((double complex*)v->coords)[i] = coord1 * coord2;
         }
+    }
+    else if (v1->size == 0)
+    {
+        printf("Error occurred: can't multiply vectors with zero dimensions.\n");
+        exit(1);
     }
     else
     {
-        printf("Error occurred when scalar multiplying vectors with different dimensions");
+        printf("Error occurred: can't multiply vectors with different dimensions.\n");
         exit(1);
     }
     return v;
 }
 
 
-void Assign(Vector* v, void** coords, size_t size, void (*AssignType)(Vector* v, void** coords, size_t size))
+void Assign(Vector* v, void* coords, size_t size, void (*AssignType)(Vector* v, void* coords, size_t size))
+// Vector is passed and filled
 {
     AssignType(v, coords, size);
 }
 
 void AssignInt(Vector* v, int* coords, size_t size)
 {
-    for (int i=0; i<size; ++i)
+    v->coords = malloc(sizeof(int)*size);
+    v->size = size;
+
+    for (size_t i=0; i<size; ++i)
     {
-        v->coords = realloc(v->coords, sizeof(int)*(i+1));
-        *((int*)v->coords[i]) = coords[i];
+        ((int*)v->coords)[i] = coords[i];
     }
 }
 
 void AssignDouble(Vector* v, double* coords, size_t size)
 {
-    for (int i=0; i<size; ++i)
+    v->coords = malloc(sizeof(double)*size);
+    v->size = size;
+
+    for (size_t i=0; i<size; ++i)
     {
-        *((double*)v->coords[i]) = coords[i];
+        ((double*)v->coords)[i] = coords[i];
     }
 }
 
 void AssignDoubleComplex(Vector* v, double complex* coords, size_t size)
 {
-    for (int i=0; i<size; ++i)
+    v->coords = malloc(sizeof(double complex)*size);
+    v->size = size;
+
+    for (size_t i=0; i<size; ++i)
     {
-        *((double complex*)v->coords[i]) = coords[i];
+        ((double complex*)v->coords)[i] = coords[i];
     }
 }
 
 
 int main()
 {
-    Vector* v = malloc(sizeof(Vector)); // create var of type Vector
-    v->coords = malloc(sizeof(v->coords));
+    Vector* v1 = VectorCtor();
+    Vector* v2 = VectorCtor();
 
-    int coordArr[3] = {1,2,3};
+    int coordArr1[3] = {1,2,3};
+    int coordArr2[3] = {5,6,9};
 
+    Assign(v1, coordArr1, 3, &AssignInt);
+    Assign(v2, coordArr2, 3, &AssignInt);
 
-    Assign(v, coordArr, 3, &AssignInt);
+    Vector* res = Sum(v1, v2, &SumInt);
+
+    for (int i=0; i<3; ++i)
+    {
+        printf("%d\n", ((int*)res->coords)[i]);
+    }
+
+    for (int i=0; i<3; ++i)
+    {
+        printf("%d\n", ((int*)v1->coords)[i]);
+    }
 
     // ctor for v variable: should fill
     //  - dimensions (size_t dimensions)
-    //  - coordinates (void** coordinates - array of void* coordinates)
 
     //Sum({1,2,3}, int arrSize, Vector* v, &VectorSum, &sumInt);
     // should check whether v.dimension equals to passed array size
