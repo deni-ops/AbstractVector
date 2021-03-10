@@ -5,9 +5,23 @@
 	<complex.h>
 	<malloc.h>
 
-1615407610 source:c:\users\shaip\yandexdisk-dshaipp\myvectorremaster\main.c
+1615408474 source:c:\users\shaip\yandexdisk-dshaipp\myvectorremaster\main.c
 	<stdio.h>
 	<stdlib.h>
 	<complex.h>
 	<malloc.h>
+	"VectorOperations.h"
+	"AbstractVector.h"
+
+1615408600 source:c:\users\shaip\yandexdisk-dshaipp\myvectorremaster\abstractvector.c
+	"AbstractVector.h"
+	"VectorOperations.h"
+	<malloc.h>
+
+1615408490 c:\users\shaip\yandexdisk-dshaipp\myvectorremaster\abstractvector.h
+	<stdio.h>
+
+1615408788 c:\users\shaip\yandexdisk-dshaipp\myvectorremaster\vectoroperations.h
+	"AbstractVector.h"
+	<complex.h>
 
