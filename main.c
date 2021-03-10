@@ -3,23 +3,24 @@
 #include <complex.h>
 #include <malloc.h>
 
+typedef struct AbstractVector Vector;
+
+struct VectorOpers
+{
+    Vector* (*sum)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
+    Vector* (*scalarMult)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
+    Vector* (*dotProduct)(Vector* v1, Vector* v2, Vector* (*CoordType)(Vector*, Vector*) );
+
+    void (*assign)(Vector* v, void* coords, size_t size, void (*AssignType)(Vector* v, void* coords, size_t size) );
+};
+
 struct AbstractVector
 {
     size_t size;
     void* coords;
+
+    struct VectorOpers* opers;
 };
-
-typedef struct AbstractVector Vector;
-
-Vector* VectorCtor()
-{
-    Vector* v = malloc(sizeof(Vector));
-
-    v->coords = NULL;
-    v->size = 0;
-
-    return v;
-}
 
 Vector* Sum(Vector* v1, Vector* v2, Vector* (*SumType)(Vector*, Vector*) )
 {
@@ -257,6 +258,24 @@ void AssignDoubleComplex(Vector* v, double complex* coords, size_t size)
     }
 }
 
+Vector* VectorCtor()
+{
+    Vector* v = malloc(sizeof(Vector));
+    v->opers = malloc(sizeof(struct VectorOpers));
+
+    v->opers->sum = malloc(sizeof(Sum));
+    v->opers->scalarMult = malloc(sizeof(ScalarMult));
+    v->opers->assign = malloc(sizeof(Assign));
+
+    v->opers->sum = &Sum;
+    v->opers->sum = &ScalarMult;
+
+    v->coords = NULL;
+    v->size = 0;
+
+    return v;
+}
+
 
 int main()
 {
@@ -280,27 +299,4 @@ int main()
     {
         printf("%d\n", ((int*)v1->coords)[i]);
     }
-
-    // ctor for v variable: should fill
-    //  - dimensions (size_t dimensions)
-
-    //Sum({1,2,3}, int arrSize, Vector* v, &VectorSum, &sumInt);
-    // should check whether v.dimension equals to passed array size
-    // void Sum(void**, size_t arrSize, Vector* v, &VectorS)
-
-    //Sum({1.4, 5,7}, int arrSize, Vector* v, &VectorSum, &sumDouble);
-
-    //Sum({1 + i*5, 5,7}, int arrSize, Vector* v, &VectorSum, &sumComplex);
-
-    //ScalarMult({1,2,3}, int arrSize, Vector* v, &VectorSum, &scalarMultInt);
-
-    //ScalarMult({13.4,5.5,7.9,1}, int arrSize, Vector* v, &VectorSum, &scalarMultInt);
-
-    //ScalarMult({13.4,5.5,7.9,1}, int arrSize, Vector* v, &VectorSum, &scalarMultComplex);
-
-
-
-
-
-
 }
